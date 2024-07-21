@@ -9,12 +9,23 @@
             font-family: Arial, sans-serif;
             margin: 40px;
             color: #333;
+            background: linear-gradient(to right, #f8c291, #6a89cc);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1, h2 {
             color: #2c3e50;
+            text-shadow: 1px 1px 2px #fff;
         }
         .section {
             margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 800px;
         }
         table {
             width: 100%;
@@ -38,6 +49,7 @@
             color: #fff;
             border: none;
             border-radius: 4px;
+            margin: 10px 0;
         }
         .button-small:hover {
             background-color: #2980b9;
@@ -70,23 +82,42 @@
                     <th>Колонка 5</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Generate rows dynamically -->
-                <script>
-                    for (let i = 0; i < 10; i++) {
-                        document.write('<tr>');
-                        for (let j = 0; j < 5; j++) {
-                            document.write('<td>Ячейка ' + (i+1) + ',' + (j+1) + '</td>');
-                        }
-                        document.write('</tr>');
-                    }
-                </script>
+            <tbody id="tableBody">
+                <!-- Rows will be generated dynamically -->
             </tbody>
         </table>
         <button class="button-small" onclick="enableEditing()">Edit</button>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTable();
+        });
+
+        function loadTable() {
+            const tableBody = document.getElementById('tableBody');
+            const savedTable = localStorage.getItem('savedTable');
+            
+            if (savedTable) {
+                tableBody.innerHTML = savedTable;
+            } else {
+                generateDefaultTable();
+            }
+        }
+
+        function generateDefaultTable() {
+            const tableBody = document.getElementById('tableBody');
+            let rows = '';
+            for (let i = 0; i < 10; i++) {
+                rows += '<tr>';
+                for (let j = 0; j < 5; j++) {
+                    rows += `<td>Ячейка ${i + 1},${j + 1}</td>`;
+                }
+                rows += '</tr>';
+            }
+            tableBody.innerHTML = rows;
+        }
+
         function enableEditing() {
             const password = prompt('Введите пароль:');
             if (password === '1234') {
@@ -112,6 +143,10 @@
         }
 
         function saveTable() {
+            const tableBody = document.getElementById('tableBody');
+            localStorage.setItem('savedTable', tableBody.innerHTML);
+            alert('Таблица сохранена');
+
             const table = document.getElementById('mainTable');
             const rows = table.rows;
 
